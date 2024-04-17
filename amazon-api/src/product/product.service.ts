@@ -22,4 +22,32 @@ export class ProductService {
   async findAll(): Promise<Product[]> {
     return this.productModel.find().exec();
   }
+
+  async findById(idProduct: string): Promise<Product> {
+    return this.productModel.findById(idProduct).exec();
+  }
+
+  async updateProduct(
+    idProduct: string,
+    name: string,
+    price: number,
+    description: string,
+  ): Promise<Product> {
+    const foundProduct = await this.productModel.findById(idProduct).exec();
+
+    foundProduct.name = name;
+    foundProduct.price = price;
+    foundProduct.description = description;
+
+    await this.productModel.updateOne(
+      { _id: idProduct },
+      {
+        name,
+        price,
+        description,
+      },
+    );
+
+    return foundProduct;
+  }
 }
