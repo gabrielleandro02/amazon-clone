@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   mongo:
@@ -6,6 +6,8 @@ services:
     image: mongo:latest
     environment:
       - MONGO_DATABASE="amazon-clone"
+      - ME_CONFIG_MONGODB_USERNAME="gabrieleandro02"
+      - ME_CONFIG_MONGODB_ROOT_PASSWORD="Bielfarias123"
     ports:
       - 27017:27017
 
@@ -15,6 +17,8 @@ services:
     environment:
       - ME_CONFIG_MONGODB_SERVER=mongo
       - ME_CONFIG_MONGODB_PORT=27017
+      - ME_CONFIG_MONGODB_USERNAME="gabrieleandro02"
+      - ME_CONFIG_MONGODB_ROOT_PASSWORD="Bielfarias123"
     depends_on:
       - mongo
     ports:
