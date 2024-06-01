@@ -3,10 +3,15 @@ import { UserService } from 'src/user/user.service';
 import * as bcrypt from 'bcrypt';
 import { NewUserDTO } from 'src/user/dto/new-user.dto';
 import { UserDetails } from 'src/user/user.interface';
+import { ExistingUserDTO } from 'src/user/dto/existing-user.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
-  constructor(private userService: UserService) {}
+  constructor(
+    private userService: UserService,
+    private jwtService: JwtService,
+  ) {}
 
   async hashPassword(password: string): Promise<string> {
     return bcrypt.hash(password, 12);
@@ -23,7 +28,7 @@ export class AuthService {
 
     const newUser = await this.userService.create(name, email, hashedPassword);
 
-    return await this.userService._getUserDetails(newUser);
+    return this.userService._getUserDetails(newUser);
   }
 
   async doesPasswordMatch(
@@ -40,9 +45,29 @@ export class AuthService {
     const user = await this.userService.findByEmail(email);
     const doesUserExist = !!user;
 
+    if (!doesUserExist) return null;
+
+    const doesPasswordMatch = await this.doesPasswordMatch(
+      password,
+      user.password,
+    );
+
+    if (!doesPasswordMatch) return null;
+
+    return this.userService._getUserDetails(user);
+  }
+
+  async login(
+    existingUser: ExistingUserDTO,
+  ): Promise<{ token: string } | null> {
+    const { email, password } = existingUser;
+
+    const user = await this.validateUser(email, password);
+    console.log('user', user);
     if (!user) return null;
 
-    const doesPasswordMatch = await this.doesPasswordMatch(password);
-    //TODO
+    const jwt = await this.jwtService.signAsync({ user });
+    console.log('jwt', jwt);
+    return { token: jwt };
   }
 }
