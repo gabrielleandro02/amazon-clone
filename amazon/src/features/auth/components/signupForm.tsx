@@ -9,12 +9,86 @@ import {
 } from "@mui/material";
 import React, { FormEvent } from "react";
 import { Link } from "react-router-dom";
+import {
+  validateNameLength,
+  validatePasswordLength,
+} from "../../../shared/utils/validation/length";
+import useInput from "../../../hooks/input/use-input";
+import { validateEmail } from "../../../shared/utils/validation/email";
+import { NewUser } from "../models/new-user";
 
 // import { Container } from './styles';
 
 const RegistrationFormComponent: React.FC = () => {
+  const {
+    text: name,
+    shouldDisplayError: nameHasError,
+    textChangeHandler: nameChangeHandler,
+    inputBlurHandler: nameBlurHandler,
+    clearHandler: nameClearHandler,
+  } = useInput(validateNameLength);
+
+  const {
+    text: email,
+    shouldDisplayError: emailHasError,
+    textChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    clearHandler: emailClearHandler,
+  } = useInput(validateEmail);
+
+  const {
+    text: password,
+    shouldDisplayError: passwordHasError,
+    textChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    clearHandler: passwordClearHandler,
+  } = useInput(validatePasswordLength);
+
+  const {
+    text: confirmPassword,
+    shouldDisplayError: confirmPasswordHasError,
+    textChangeHandler: confirmPasswordChangeHandler,
+    inputBlurHandler: confirmPasswordBlurHandler,
+    clearHandler: confirmPasswordClearHandler,
+  } = useInput(validatePasswordLength);
+
+  const clearForm = () => {
+    nameClearHandler();
+    emailClearHandler();
+    passwordClearHandler();
+    confirmPasswordClearHandler();
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (password !== confirmPassword) return;
+
+    if (
+      nameHasError ||
+      emailHasError ||
+      passwordHasError ||
+      confirmPasswordHasError
+    )
+      return;
+
+    if (
+      name?.length === 0 ||
+      email?.length === 0 ||
+      password?.length === 0 ||
+      confirmPassword?.length === 0
+    )
+      return;
+
+    const newUser: NewUser = {
+      name,
+      email,
+      password,
+    };
+
+    console.log("NEW USER", newUser);
+
+    clearForm();
     console.log("submit");
   };
 
@@ -42,6 +116,11 @@ const RegistrationFormComponent: React.FC = () => {
           </InputLabel>
           <TextField
             type="text"
+            value={name}
+            onChange={nameChangeHandler}
+            onBlur={nameBlurHandler}
+            error={nameHasError}
+            helperText={nameHasError ? "Enter your name" : ""}
             name="name"
             id="name"
             variant="outlined"
@@ -55,11 +134,16 @@ const RegistrationFormComponent: React.FC = () => {
             Your email
           </InputLabel>
           <TextField
-            type="text"
+            type="email"
             name="email"
             id="email"
             variant="outlined"
             size="small"
+            value={email}
+            onChange={emailChangeHandler}
+            onBlur={emailBlurHandler}
+            error={emailHasError}
+            helperText={emailHasError ? "Enter your email" : ""}
           />
 
           <InputLabel
@@ -69,12 +153,17 @@ const RegistrationFormComponent: React.FC = () => {
             Your password
           </InputLabel>
           <TextField
-            type="text"
+            type="password"
             name="password"
             id="password"
             variant="outlined"
             size="small"
             placeholder="Minimum 6 characters required"
+            value={password}
+            onChange={passwordChangeHandler}
+            onBlur={passwordBlurHandler}
+            error={passwordHasError}
+            helperText={passwordHasError ? "Minimum 6 characters required" : ""}
           />
 
           <InputLabel
@@ -84,11 +173,20 @@ const RegistrationFormComponent: React.FC = () => {
             Re-enter password
           </InputLabel>
           <TextField
-            type="text"
+            type="password"
             name="reenter-password"
             id="reenter-password"
             variant="outlined"
             size="small"
+            value={confirmPassword}
+            onChange={confirmPasswordChangeHandler}
+            onBlur={confirmPasswordBlurHandler}
+            error={confirmPassword.length > 0 && password !== confirmPassword}
+            helperText={
+              confirmPassword.length > 0 && password !== confirmPassword
+                ? "Password must match"
+                : ""
+            }
           />
 
           <Button

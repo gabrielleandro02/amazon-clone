@@ -9,12 +9,39 @@ import {
 } from "@mui/material";
 import React, { FormEvent } from "react";
 import { Link } from "react-router-dom";
-
-// import { Container } from './styles';
+import useInput from "../../../hooks/input/use-input";
+import { validatePasswordLength } from "../../../shared/utils/validation/length";
+import { validateEmail } from "../../../shared/utils/validation/email";
 
 const SignFormComponent: React.FC = () => {
+  const {
+    text: email,
+    shouldDisplayError: emailHasError,
+    textChangeHandler: emailChangeHandler,
+    inputBlurHandler: emailBlurHandler,
+    clearHandler: emailClearHandler,
+  } = useInput(validateEmail);
+
+  const {
+    text: password,
+    shouldDisplayError: passwordHasError,
+    textChangeHandler: passwordChangeHandler,
+    inputBlurHandler: passwordBlurHandler,
+    clearHandler: passwordClearHandler,
+  } = useInput(validatePasswordLength);
+
+  const clearForm = () => {
+    emailClearHandler();
+    passwordClearHandler();
+  };
+
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (emailHasError || passwordHasError) return;
+
+    if (email?.length === 0 || password?.length === 0) return;
+
+    clearForm();
     console.log("submit");
   };
 
@@ -47,6 +74,11 @@ const SignFormComponent: React.FC = () => {
               id="email"
               variant="outlined"
               size="small"
+              value={email}
+              onChange={emailChangeHandler}
+              onBlur={emailBlurHandler}
+              error={emailHasError}
+              helperText={emailHasError ? "Enter your email" : ""}
             />
 
             <InputLabel
@@ -62,6 +94,13 @@ const SignFormComponent: React.FC = () => {
               variant="outlined"
               size="small"
               placeholder="Minimum 6 characters required"
+              value={password}
+              onChange={passwordChangeHandler}
+              onBlur={passwordBlurHandler}
+              error={passwordHasError}
+              helperText={
+                passwordHasError ? "Minimum 6 characters required" : ""
+              }
             />
 
             <Button
