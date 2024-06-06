@@ -18,8 +18,12 @@ export class AuthController {
   async login(
     @Body() user: ExistingUserDTO,
   ): Promise<{ token: string } | null> {
-    const ret = await this.authService.login(user);
-    console.log('eet', ret);
-    return ret;
+    return await this.authService.login(user);
+  }
+
+  @Post('verify-jwt')
+  @HttpCode(HttpStatus.OK)
+  async verifyJwt(@Body() payload: { jwt: string }): Promise<{ exp: number }> {
+    return await this.authService.verifyJwt(payload.jwt);
   }
 }

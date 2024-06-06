@@ -1,6 +1,6 @@
 import React from "react";
-import AuthLayout from "../../features/auth/components/authLayout";
-import SignFormComponent from "../../features/auth/components/signForm";
+import AuthLayout from "../../features/auth/components/auth-layout";
+import SignFormComponent from "../../features/auth/components/sign-form";
 
 // import { Container } from './styles';
 
