@@ -1,14 +1,14 @@
-import React from "react";
+import React, { useEffect } from "react";
 import AuthLayout from "../../features/auth/components/auth-layout";
-import { useNavigate } from "react-router-dom";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux/hooks";
-
-// import { Container } from './styles';
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user } = useAppSelector((state) => state.auth);
-  const navigate = useNavigate();
+  const { user, jwt } = useAppSelector((state) => state.auth);
+
+  useEffect(() => {
+    console.log("user", user, jwt);
+  }, [user, jwt]);
 
   const logoutHandler = () => {
     dispatch(logout());
@@ -17,6 +17,7 @@ const HomePage: React.FC = () => {
     <AuthLayout>
       <h1>Home Page</h1>
       <a
+        href="#"
         onClick={logoutHandler}
         style={{
           backgroundColor: "yellow",
