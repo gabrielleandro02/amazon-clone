@@ -103,8 +103,9 @@ export const authSlice = createSlice({
       .addCase(sign.fulfilled, (state, action) => {
         state.isLoading = false;
         state.isSuccess = true;
-        state.jwt = action.payload;
+        state.jwt = action.payload.jwt;
         state.isAuthenticated = true;
+        state.user = action.payload.user;
       })
       .addCase(sign.rejected, (state) => {
         state.isLoading = false;

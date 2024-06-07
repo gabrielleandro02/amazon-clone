@@ -1,10 +1,11 @@
 import React, { useEffect } from "react";
 import AuthLayout from "../../features/auth/components/auth-layout";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux/hooks";
+import { selectedUser } from "../../features/auth/auth-slice";
 
 const HomePage: React.FC = () => {
   const dispatch = useAppDispatch();
-  const { user, jwt } = useAppSelector((state) => state.auth);
+  const { user, jwt } = useAppSelector(selectedUser);
 
   useEffect(() => {
     console.log("user", user, jwt);
