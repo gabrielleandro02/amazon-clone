@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useEffect } from "react";
 import AuthLayout from "../../features/auth/components/auth-layout";
 import { useAppDispatch, useAppSelector } from "../../hooks/redux/hooks";

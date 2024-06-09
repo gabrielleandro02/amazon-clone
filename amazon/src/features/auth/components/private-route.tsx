@@ -13,6 +13,7 @@ const PrivateRoute = ({ page }: { page: JSX.Element }) => {
     if (!jwt || !jwt?.token) return;
 
     dispatch(verifyJwt(jwt.token));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [jwt, isSuccess]);
 
   return isAuthenticated ? page : <Navigate replace to="/sign" />;

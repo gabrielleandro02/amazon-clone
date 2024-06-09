@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   Box,
   Grid,
@@ -123,6 +124,10 @@ const SignFormComponent: React.FC = () => {
             />
 
             <Button
+              disabled={
+                !validatePasswordLength(password) || !validateEmail(email)
+              }
+              role="button"
               variant={"contained"}
               style={{
                 marginTop: "16px",

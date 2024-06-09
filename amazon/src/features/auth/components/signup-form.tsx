@@ -1,3 +1,4 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import {
   Box,
   Grid,
@@ -72,6 +73,7 @@ const RegistrationFormComponent: React.FC = () => {
       clearForm();
       navigate("/sign");
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isSuccess, dispatch]);
 
   const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
